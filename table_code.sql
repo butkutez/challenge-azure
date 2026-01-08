@@ -1,5 +1,5 @@
-IF OBJECT_ID('dbo.GhentDepartures', 'U') IS NOT NULL
-    DROP TABLE dbo.GhentDepartures;
+-- IF OBJECT_ID('dbo.GhentDepartures', 'U') IS NOT NULL
+    -- DROP TABLE dbo.GhentDepartures;
 
 CREATE TABLE GhentDepartures (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -13,4 +13,4 @@ CREATE TABLE GhentDepartures (
     destination NVARCHAR(255),
     created_at DATETIME DEFAULT GETDATE()
 )
-SELECT * FROM [dbo].[GhentDepartures];
+-- SELECT * FROM [dbo].[GhentDepartures];

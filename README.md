@@ -1,8 +1,8 @@
-# iRail Data Engineering Pipeline
+# iRail Data Engineering Pipeline - Ghent Sint Pieters Station
 
-[![forthebadge made-with-python](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=Made+with&secondaryLabel=SQL&primaryBGColor=%2331C4F3&primaryTextColor=%23FFFFFF&secondaryBGColor=%23389AD5&secondaryTextColor=%23FFFFFF&primaryFontSize=11&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase&secondaryIcon=sqlite&secondaryIconColor=%23FFFFFF&secondaryIconSize=16&secondaryIconPosition=left)](https://forthebadge.com/generator)
-[![forthebadge made-with-python](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=visualised+with&secondaryLabel=Power+BI&primaryBGColor=%23ff52b7&primaryTextColor=%23FFFFFF&secondaryBGColor=%23b530f3&secondaryTextColor=%23FFFFFF&primaryFontSize=11&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase)](https://forthebadge.com/generator)
 [![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+[![forthebadge made-with-azure sql](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=MADE+WITH&secondaryLabel=AZURE+SQL&primaryBGColor=%2331C4F3&primaryTextColor=%23FFFFFF&secondaryBGColor=%23389AD5&secondaryTextColor=%23FFFFFF&primaryFontSize=12&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase)](https://forthebadge.com/generator)
+<!-- [![forthebadge visualised-with-power BI](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=visualised+with&secondaryLabel=Power+BI&primaryBGColor=%23ff52b7&primaryTextColor=%23FFFFFF&secondaryBGColor=%23b530f3&secondaryTextColor=%23FFFFFF&primaryFontSize=11&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase)](https://forthebadge.com/generator) -->
 
 
 [![Wallpaper](https://www.luetze-transportation.com/fileadmin/luetze-transportation.com/media/en/blog/ai-in-the-railway-ecosystem/ai-in-the-railway-ecosystem-luetze-transportation-gmbh.jpg)](https://www.luetze-transportation.com/blog/ai-in-the-railway-ecosystem)  
@@ -11,7 +11,58 @@
 ## Description
 The Belgian railway network is a complex web of real-time movements, delays, and connections. This project focuses on building a robust, cloud-native data pipeline to capture this motion. By fetching live data from the [iRail API](https://docs.irail.be/), processing it through Azure Functions, and storing it in an Azure SQL Database, this project transforms raw transport streams into structured insights for delay monitoring and operational analysis.
 
+## Installation
+
+1. **Clone the project:**
+
+```
+    git clone https://github.com/butkutez/challenge-azure.git
+    cd challenge-azure
+```
+2. **Create virtual environment (Windows)**
+```
+   python3.10 -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+3. **Install dependencies**  
+```
+    pip install -r requirements.txt
+```
+
+4. **Run the Data Pipeline** 
+
+To fetch live data from iRail and populate your database, run the following command in your terminal:
+
+```
+    func start
+```
+Once the host is running, open the provided **local URL** (check the terminal)  in your browser.
+
+## Repo Structure
+
+```
+CHALLENGE-AZURE
+├── .funcignore                   
+├── .gitignore
+├── function_app.py
+├── host.json        
+├── README.md
+├── requirements.txt
+└── table_code.sql
+```
+***Note**: `local.settings.json` is excluded from this repo for security but is required for local execution.*
+
 ## Process & Methodology
+### Project Architecture
+
+```
+┌─────────────┐      ┌──────────────────┐      ┌─────────────────┐
+│  iRail API  │ ──►  │  Azure Function  │ ──►  │  Azure SQL DB   │
+│ /liveboard  │      │     (Python)     │      │  GhentDepartures│
+└─────────────┘      └──────────────────┘      └─────────────────┘
+   Raw JSON              Cleansed Data             Stored Data
+```
 The development of this pipeline followed a structured approach to ensure data integrity and cloud compatibility.
 
 I. **Data Source & Analysis**
@@ -66,62 +117,19 @@ CREATE TABLE GhentDepartures (
 );
 ```
 
-## Repo Structure
-
-```
-CHALLENGE-AZURE
-├── database/                   
-│   └── takeaway.db
-├── reports/                
-│   └── power_BI_analysis.pbip
-├── results/                 
-│   ├── ER_schema_takeaway.png
-│   ├── Q1.png
-│   └── ...                 
-├── README.md
-└── sql_analysis.sql
-```
-
-## Installation
-
-1. **Clone the project:**
-
-```
-git clone https://github.com/butkutez/delivery-market-analysis.git
-```
-2. **SQL Analysis:**
-
-- Open sql_analysis.sql in SQLite extension in VS Code (Extention ID: *alexcvzz.vscode-sqlite*).
-
-- Connect to database/takeaway.db to execute queries in VS code.
-
-3. **Power BI Report:**
-
-- Ensure you have the latest version of Power BI Desktop.
-- To access the database via Power BI or external tools, please ensure the SQLite ODBC Driver is installed. Detailed setup instructions can be found
-[here](https://www.thebricks.com/resources/guide-can-power-bi-connect-to-sqlite-database).
-
-## Summary
-
-This project aimed to uncover market dynamics and consumer value drivers within the food delivery sector. To achieve this, I conducted a structured analysis centered around 10 key business questions:
-
-1. What is the price distribution of menu items?
-2. What is the distribution of restaurants per location?
-3. Which are the top 10 pizza restaurants by rating?
-4. Map locations offering kapsalons (or your favorite dish) and their average price.
-5. Which restaurants have the best price-to-rating ratio?
-6. Where are the delivery ‘dead zones’—areas with minimal restaurant coverage?
-7. How does the availability of vegetarian and vegan dishes vary by area?
-8. Identify the World Hummus Order (WHO); top 3 hummus serving restaurants.
-9. Identify top 10 vegan restaurants in Ghent by rating.
-10. Do restaurants that support delivery charge more for their food than restaurants that only support pickup?
-
-**The Result:** By answering these questions, I successfully visualized complex market trends and extracted actionable insights using SQL and Power BI. The analysis provides a clear map of market saturation and consumer value, identifying specific opportunities for expansion in underserved "dead zones."
+**The Result:**  
+By automating the pipeline from iRail API to Azure SQL, I transformed raw JSON into structured transit insights for Ghent-Sint-Pieters.
 
 **Future Improvements:**  
-- Schema Optimization: Improve database normalization for faster query performance.
+- *Timer Trigger*: Automate data collection every hour for historical trend analysis.
 
-- Cross-Platform Benchmarking: Compare delivery fee variations across Uber Eats and Deliveroo.
+- *Live Power BI Dashboard*: Connect Power BI Service (online) directly to Azure SQL for real-time reporting: 
+
+    - Develop visuals: Time-series line graphs (trains per hour) and reliability bar charts.
+
+    - Publish the dashboard to the web for public commuter access.
+
+- *Predictive Analytics*: Use historical data to predict delays based on weather or time of day.
 
 ## **Timeline**
 This project was completed over 4 days.

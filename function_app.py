@@ -16,7 +16,7 @@ def fetch_ghent_departures(req: func.HttpRequest) -> func.HttpResponse:
     # API setup / fetching data
     url = "https://api.irail.be/liveboard/"
     params = {"station": "Ghent-Sint-Pieters", "format": "json", "lang": "en"}
-    headers = {"User-Agent": "Azure-project-irail/1.0 (becode.be; Zivile@becode.education)"}
+    headers = {"User-Agent": "Azure-project-irail/1.0 (becode.be; {my_email})"}
         
     # Calling the API
     try: 
