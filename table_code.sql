@@ -13,4 +13,11 @@ CREATE TABLE GhentDepartures (
     destination NVARCHAR(255),
     created_at DATETIME DEFAULT GETDATE()
 )
--- SELECT * FROM [dbo].[GhentDepartures];
+-- SELECT 
+--     vehicle,
+--     destination,
+--     FORMAT(CAST(departure_time AS DATETIME), 'dd/MM/yyyy HH:mm') AS [Departure],
+--     delay_in_seconds / 60 AS [Delay (Min)],
+--     CASE WHEN canceled = 1 THEN 'YES' ELSE 'NO' END AS [Is Canceled]
+-- FROM GhentDepartures
+-- ORDER BY departure_time DESC;

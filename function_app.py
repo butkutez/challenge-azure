@@ -20,7 +20,7 @@ def fetch_ghent_departures(req: func.HttpRequest) -> func.HttpResponse:
         
     # Calling the API
     try: 
-        response = requests.get(url, params=params, headers=headers, timeout=30)
+        response = requests.get(url, params=params, headers=headers, timeout=60)
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:

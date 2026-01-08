@@ -54,7 +54,6 @@ CHALLENGE-AZURE
 ***Note**: `local.settings.json` is excluded from this repo for security but is required for local execution.*
 
 ## Process & Methodology
-### Project Architecture
 
 ```
 ┌─────────────┐      ┌──────────────────┐      ┌─────────────────┐
@@ -97,7 +96,7 @@ The infrastructure was provisioned via the Azure Portal:
 - **Security**: To avoid hardcoding credentials, I utilized Azure App Settings (Environment Variables) to store the SQL_AZURE_CONNECTION string.
 
 IV. **Database Integration**  
-I used the pyodbc driver to establish a connection. To optimize performance, I implemented ```cursor.executemany()```. This allows the function to send all train departures in a single batch to the database, reducing "chattiness" and improving execution speed.
+I used the **pyodbc driver** to establish a connection. To optimize performance, I implemented ```cursor.executemany()```. This allows the function to send all train departures in a single batch to the database, reducing "chattiness" and improving execution speed.
 
 ## SQL Schema
 To support the data being fetched, I created the following table in Azure SQL:
@@ -117,10 +116,10 @@ CREATE TABLE GhentDepartures (
 );
 ```
 
-**The Result:**  
+## **The Result:**  
 By automating the pipeline from iRail API to Azure SQL, I transformed raw JSON into structured transit insights for Ghent-Sint-Pieters.
 
-**Future Improvements:**  
+## **Future Improvements:**  
 - *Timer Trigger*: Automate data collection every hour for historical trend analysis.
 
 - *Live Power BI Dashboard*: Connect Power BI Service (online) directly to Azure SQL for real-time reporting: 
