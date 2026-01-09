@@ -43,6 +43,9 @@ Once the host is running, open the provided **local URL** (check the terminal)  
 
 ```
 CHALLENGE-AZURE
+├──assets
+│   ├── Azure_Function_app_test.png
+│   └── Azure_SQL_database.png
 ├── .funcignore                   
 ├── .gitignore
 ├── function_app.py
@@ -118,6 +121,17 @@ CREATE TABLE GhentDepartures (
 
 ## **The Result:**  
 By automating the pipeline from iRail API to Azure SQL, I transformed raw JSON into structured transit insights for Ghent-Sint-Pieters.
+
+**Azure App Test**:  
+Successful execution of the `fetch_ghent_departures` function, returning live vehicle data.
+
+![function app](assets/Azure_Function_app_test.png)
+
+**Azure SQL Database**:  
+The `irail-SQL-DB` showing the `GhentDepartures` table successfully populated with real-time train numbers, delay times and information about the train.
+
+![SQL database](assets/Azure_SQL_database.png)
+
 
 ## **Future Improvements:**  
 - *Timer Trigger*: Automate data collection every hour for historical trend analysis.
