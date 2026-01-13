@@ -2,14 +2,14 @@
 
 [![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 [![forthebadge made-with-azure sql](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=MADE+WITH&secondaryLabel=AZURE+SQL&primaryBGColor=%2331C4F3&primaryTextColor=%23FFFFFF&secondaryBGColor=%23389AD5&secondaryTextColor=%23FFFFFF&primaryFontSize=12&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase)](https://forthebadge.com/generator)
-<!-- [![forthebadge visualised-with-power BI](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=visualised+with&secondaryLabel=Power+BI&primaryBGColor=%23ff52b7&primaryTextColor=%23FFFFFF&secondaryBGColor=%23b530f3&secondaryTextColor=%23FFFFFF&primaryFontSize=11&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase)](https://forthebadge.com/generator) -->
+[![forthebadge visualised-with-power BI](https://forthebadge.com/api/badges/generate?panels=2&primaryLabel=visualised+with&secondaryLabel=Power+BI&primaryBGColor=%23ff52b7&primaryTextColor=%23FFFFFF&secondaryBGColor=%23b530f3&secondaryTextColor=%23FFFFFF&primaryFontSize=11&primaryFontWeight=400&primaryLetterSpacing=2&primaryFontFamily=Roboto&primaryTextTransform=uppercase&secondaryFontSize=12&secondaryFontWeight=900&secondaryLetterSpacing=2&secondaryFontFamily=Montserrat&secondaryTextTransform=uppercase)](https://forthebadge.com/generator)
 
 
 [![Wallpaper](https://www.luetze-transportation.com/fileadmin/luetze-transportation.com/media/en/blog/ai-in-the-railway-ecosystem/ai-in-the-railway-ecosystem-luetze-transportation-gmbh.jpg)](https://www.luetze-transportation.com/blog/ai-in-the-railway-ecosystem)  
 *Image source: [Luetze Transportation](https://www.luetze-transportation.com/blog/ai-in-the-railway-ecosystem)*
 
 ## Description
-The Belgian railway network is a complex web of real-time movements, delays, and connections. This project focuses on building a robust, cloud-native data pipeline to capture this motion. By fetching live data from the [iRail API](https://docs.irail.be/), processing it through Azure Functions, and storing it in an Azure SQL Database, this project transforms raw transport streams into structured insights for delay monitoring and operational analysis.
+The Belgian railway network is a complex web of real-time movements, delays, and connections. This project focuses on building a robust, cloud-native data pipeline to capture this motion. By fetching live data from the [iRail API](https://docs.irail.be/), processing it via scheduled Azure Functions, and storing it in an Azure SQL Database, the system transforms raw transport streams into dynamic Power BI insights. This setup allows for continuous monitoring of delay trends and operational reliability at Ghent-Sint-Pieters station without manual intervention.
 
 ## Installation
 
@@ -59,11 +59,11 @@ CHALLENGE-AZURE
 ## Process & Methodology
 
 ```
-┌─────────────┐      ┌──────────────────┐      ┌─────────────────┐
-│  iRail API  │ ──►  │  Azure Function  │ ──►  │  Azure SQL DB   │
-│ /liveboard  │      │     (Python)     │      │  GhentDepartures│
-└─────────────┘      └──────────────────┘      └─────────────────┘
-   Raw JSON              Cleansed Data             Stored Data
+┌─────────────┐       ┌──────────────────┐       ┌─────────────────┐       ┌──────────────┐
+│  iRail API  │ ──►   │  Azure Function  │ ──►   │  Azure SQL DB   │ ──►   │   Power BI   │
+│ /liveboard  │       │     (Python)     │       │  GhentDepartures│       │  Dashboard   │
+└─────────────┘       └──────────────────┘       └─────────────────┘       └──────────────┘
+   Raw JSON       Automated Cloud Data Pipeline      Stored Data             Live Insights
 ```
 The development of this pipeline followed a structured approach to ensure data integrity and cloud compatibility.
 
@@ -94,12 +94,16 @@ III. **Cloud Infrastructure Setup**
 The infrastructure was provisioned via the Azure Portal:
 - **Azure SQL Database**: Created a serverless database and configured the Server-level Firewall to allow the Function App's IP address.
 
-- **Function App**: Configured a Python 3.10 environment.
+- **Function App (Timer Trigger)**: Transitioned the project from a manual HTTP trigger to a scheduled Timer Trigger using a CRON expression ```(0 */10 * * * *)```. This ensures the "Extract" and "Load" phases execute automatically every 10 minutes, maintaining a near-real-time dataset of Ghent station activity.
 
 - **Security**: To avoid hardcoding credentials, I utilized Azure App Settings (Environment Variables) to store the SQL_AZURE_CONNECTION string.
 
 IV. **Database Integration**  
-I used the **pyodbc driver** to establish a connection. To optimize performance, I implemented ```cursor.executemany()```. This allows the function to send all train departures in a single batch to the database, reducing "chattiness" and improving execution speed.
+To handle real-time data overlaps, I implemented a SQL MERGE (Upsert) strategy. Rather than performing a standard bulk insert which could lead to primary key violations or duplicate records, the pipeline evaluates each record:
+
+- MATCHED: Existing records are updated with the latest ``delay``,  ``platform`` and ``canceled`` information.
+
+- NOT MATCHED: New train departures are seamlessly inserted into the ``GhentDepartures`` table. This ensures the database remains a "Single Source of Truth" for station status, even across multiple scheduled scrapes.
 
 ## SQL Schema
 To support the data being fetched, I created the following table in Azure SQL:
@@ -134,18 +138,13 @@ The `irail-SQL-DB` showing the `GhentDepartures` table successfully populated wi
 
 
 ## **Future Improvements:**  
-- *Timer Trigger*: Automate data collection every hour for historical trend analysis.
 
-- *Live Power BI Dashboard*: Connect Power BI Service (online) directly to Azure SQL for real-time reporting: 
-
-    - Develop visuals: Time-series line graphs (trains per hour) and reliability bar charts.
-
-    - Publish the dashboard to the web for public commuter access.
+- *Live Power BI Dashboard*: upload generated graphs to README.md.
 
 - *Predictive Analytics*: Use historical data to predict delays based on weather or time of day.
 
 ## **Timeline**
-This project was completed over 4 days.
+This solo project was completed over 5 days.
 
 ## **Personal Situation**
 This project was completed as part of the AI & Data Science Bootcamp at BeCode.org.
