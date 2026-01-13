@@ -15,6 +15,9 @@ CREATE TABLE GhentDepartures (
 )
 -- SELECT 
 --     vehicle,
+-- 	train_number,
+-- 	train_type,
+-- 	platform,
 --     destination,
 --     FORMAT(CAST(departure_time AS DATETIME), 'dd/MM/yyyy HH:mm') AS [Departure],
 --     delay_in_seconds / 60 AS [Delay (Min)],
